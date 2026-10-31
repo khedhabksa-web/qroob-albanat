@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>إحصائيات قروب البنات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=Lalezar&display=swap">
+<style>
+/* Layout: a one-column campaign scoreboard — headline numbers, then the funnel, then clicks per box and taps per hair problem */
+:root {
+  --bg: #F4EEE6; --card: #FFFDF9; --fg: #2A1A12; --muted: #7D6A5E; --accent: #B4471F; --leaf: #5F6B2E; --line: rgba(91, 42, 23, .12);
+  --display: "Lalezar", "IBM Plex Sans Arabic", Tahoma, sans-serif; --body: "IBM Plex Sans Arabic", Tahoma, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #15100D; --card: #241A15; --fg: #F2E6DD; --muted: #A8958A; --accent: #E58257; --leaf: #AEBE70; --line: rgba(246, 227, 214, .12); color-scheme: dark; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--body); line-height: 1.6; }
+.wrap { max-width: 720px; margin: 0 auto; padding: 24px 16px 40px; }
+h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 30px; }
+.sub { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+h2 { margin: 28px 0 10px; font-size: 16px; }
+.big { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 18px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+.card b { display: block; font-family: var(--display); font-weight: 400; font-size: 36px; line-height: 1.1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.card span { font-size: 13px; color: var(--muted); }
+.rows { display: flex; flex-direction: column; gap: 8px; }
+.row { display: grid; grid-template-columns: 9.5em 1fr 3em; gap: 10px; align-items: center; font-size: 14px; }
+.bar { height: 10px; border-radius: 999px; background: color-mix(in srgb, var(--accent) 12%, transparent); overflow: hidden; }
+.bar i { display: block; height: 100%; border-radius: inherit; background: var(--accent); }
+.row.p .bar i { background: var(--leaf); }
+.row em { font-style: normal; font-weight: 700; text-align: left; font-variant-numeric: tabular-nums; }
+.links { font-size: 13px; color: var(--muted); }
+.links code { display: block; direction: ltr; text-align: left; overflow-wrap: anywhere; background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; margin: 4px 0 10px; color: var(--fg); }
+.note { margin-top: 24px; font-size: 13px; color: var(--muted); }
+button { font: inherit; font-size: 13px; font-weight: 700; border: 0; border-radius: 999px; padding: 6px 14px; background: var(--accent); color: var(--card); cursor: pointer; }
+.head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+@media (max-width: 420px) { .row { grid-template-columns: 7.5em 1fr 2.6em; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div>
+      <h1>إحصائيات قروب البنات</h1>
+      <p class="sub" id="updated">جاري التحميل…</p>
+    </div>
+    <button id="refresh" type="button">حدّث الأرقام</button>
+  </div>
+
+  <section class="big">
+    <div class="card"><b id="n-visits">–</b><span>دخلوا القروب من الباركود</span></div>
+    <div class="card"><b id="n-stayed">–</b><span>كملوا المحادثة لين دخلت نورة</span></div>
+    <div class="card"><b id="n-clicks">–</b><span>ضغطوا على رابط منتج أو المتجر</span></div>
+  </section>
+
+  <h2>الضغطات على روابط المنتجات</h2>
+  <div class="rows" id="prods"></div>
+
+  <h2>وش أكثر مشكلة سألوا عنها؟</h2>
+  <div class="rows" id="chips"></div>
+
+  <h2>روابط الحملة</h2>
+  <div class="links" id="links"></div>
+
+  <p class="note">الأرقام تتحدث لحالها كل دقيقة. الزيارة تنحسب مرة وحدة لكل جوال لين يسكر الصفحة. وعشان تعرفون كم طلب جاء من الحملة، شوفوا في تقارير متجركم الزيارات اللي فيها <b>malaqif_noura</b>.</p>
+</div>
+
+<script>
+const NS = 'https://abacus.jasoncameron.dev/get/khedhab-qroob/';
+const PRODUCTS = [['box', 'بوكس حنا وسدر'], ['henna', 'بوكس حنا'], ['sidr', 'بوكس سدر'], ['store', 'المتجر']];
+const CHIPS = [['hands', 'حنا اليدين'], ['frizz', 'منفوش'], ['dyed', 'شعري مصبوغ'], ['babyhair', 'البيبي هير خفيف'], ['fall', 'يتساقط'],
+  ['dandruff', 'قشرة وحكة'], ['oily', 'دهني'], ['dry', 'ناشف ومتقصف'], ['gray', 'شيب'], ['dull', 'شعري باهت'], ['skin', 'بشرتي باهتة']];
+const LINKS = [
+  ['الباركود (القروب)', 'https://khedhabksa-web.github.io/qroob-albanat/'],
+  ['المتجر', 'https://kedhab-ksa.com/ar?utm_source=qr&utm_medium=offline&utm_campaign=malaqif_noura&utm_content=store'],
+  ['بوكس حنا وسدر', 'https://kedhab-ksa.com/ar/-/p1558882798?utm_source=qr&utm_medium=offline&utm_campaign=malaqif_noura&utm_content=box'],
+  ['بوكس حنا', 'https://kedhab-ksa.com/ar/-/p1793113187?utm_source=qr&utm_medium=offline&utm_campaign=malaqif_noura&utm_content=henna'],
+  ['بوكس سدر', 'https://kedhab-ksa.com/ar/-/p40122968?utm_source=qr&utm_medium=offline&utm_campaign=malaqif_noura&utm_content=sidr']
+];
+const AR = '٠١٢٣٤٥٦٧٨٩';
+const num = n => String(n).replace(/\d/g, d => AR[d]);
+const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+async function get(key) {
+  try {
+    const r = await fetch(NS + encodeURIComponent(key), { cache: 'no-store' });
+    if (!r.ok) return 0;
+    const j = await r.json();
+    return j.value > 0 ? j.value : 0;
+  } catch (e) { return null; }
+}
+function rows(el, list, cls) {
+  const max = Math.max(1, ...list.map(x => x[2]));
+  el.innerHTML = list.map(([, label, n]) =>
+    `<div class="row ${cls}"><span>${esc(label)}</span><div class="bar"><i style="width:${(n / max) * 100}%"></i></div><em>${num(n)}</em></div>`).join('');
+}
+async function load() {
+  const [visits, stayed, ...rest] = await Promise.all([get('visits'), get('stayed'),
+    ...PRODUCTS.map(([k]) => get('click-' + k)), ...CHIPS.map(([k]) => get('chip-' + k))]);
+  if (visits === null) { document.getElementById('updated').textContent = 'ما قدرت أجيب الأرقام، تأكد من النت وحدّث.'; return; }
+  const prods = PRODUCTS.map(([k, l], i) => [k, l, rest[i] || 0]);
+  const chips = CHIPS.map(([k, l], i) => [k, l, rest[PRODUCTS.length + i] || 0]).sort((a, b) => b[2] - a[2]);
+  document.getElementById('n-visits').textContent = num(visits);
+  document.getElementById('n-stayed').textContent = num(stayed || 0);
+  document.getElementById('n-clicks').textContent = num(prods.reduce((s, p) => s + p[2], 0));
+  rows(document.getElementById('prods'), prods, 'p');
+  rows(document.getElementById('chips'), chips, '');
+  document.getElementById('updated').textContent = 'آخر تحديث: ' + num(new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }));
+}
+document.getElementById('links').innerHTML = LINKS.map(([l, u]) => `${esc(l)}<code>${esc(u)}</code>`).join('');
+document.getElementById('refresh').addEventListener('click', load);
+load();
+setInterval(load, 60000);
+</script>
+</body>
+</html>
