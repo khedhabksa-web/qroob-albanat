@@ -143,6 +143,9 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .steps li::before { content: counter(s, arabic-indic); flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center;
   font-size: 12px; font-weight: 700; color: var(--in); background: var(--accent); margin-top: 1px; }
 .kb { color: var(--accent); font-weight: 700; }
+.shot { margin: 6px -6px 2px; }
+.shot img { display: block; width: min(260px, 62vw); aspect-ratio: 1; object-fit: cover; border-radius: 10px; }
+.shot figcaption { font-size: 12px; color: var(--muted); margin-top: 3px; }
 .gallery { display: flex; gap: 8px; overflow-x: auto; margin: 6px -4px 4px; padding-bottom: 4px; scroll-snap-type: x mandatory; }
 .gallery figure { margin: 0; flex: none; width: 170px; scroll-snap-align: start; }
 .gallery img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; }
@@ -202,8 +205,15 @@ const CONFIG = {
   // رابط المتجر مع رموز تتبع خاصة بحملة الباركود (تظهر في Google Analytics / تقارير المتجر)
   storeUrl: 'https://kedhab-ksa.com/ar?utm_source=qr&utm_medium=offline&utm_campaign=malaqif_noura',
   displayUrl: 'kedhab-ksa.com',
-  // صور المنتجات اللي ترسلها نورة في القروب (حطوا الصور في مجلد images بنفس الأسماء)
-  photos: [],
+  // صور المنتجات اللي ترسلها نورة في القروب (من مجلد images)
+  boxPhoto: { src: 'images/box.jpg', caption: 'بوكس خضاب كامل 🎁' },
+  photos: [
+    { src: 'images/henna.jpg', caption: 'كيس حنا خضاب' },
+    { src: 'images/sidr.jpg',  caption: 'كيس سدر خضاب' },
+    { src: 'images/bowl.jpg',  caption: 'طاسة خضاب الخشب' },
+    { src: 'images/brush.jpg', caption: 'فرشة خضاب الخشب' },
+    { src: 'images/comb.jpg',  caption: 'مشط خضاب الخشب وكيسه' }
+  ],
   code: 'نورة10'                    // كود الخصم (لازم يكون نفس الكود اللي في لوحة المتجر)
 };
 
@@ -280,8 +290,12 @@ function linkCard() {
     `<a href="${esc(CONFIG.storeUrl)}" target="_blank" rel="noopener">${esc(CONFIG.displayUrl)}</a></div></div>`;
 }
 // Noura's product photos, sent as a swipeable strip
+function boxCard() {
+  const b = CONFIG.boxPhoto;
+  return `<span class="text">هذا البوكس اللي وصلني 😍</span><figure class="shot"><img src="${esc(b.src)}" alt="${esc(b.caption)}"><figcaption>${esc(b.caption)}</figcaption></figure>`;
+}
 function galleryCard() {
-  return `<span class="text">شوفوا بأنفسكم 👇</span><div class="gallery">` +
+  return `<span class="text">وهذي الأدوات من قريب، شوفوا الخشب 👇</span><div class="gallery">` +
     CONFIG.photos.map(p => `<figure><img src="${esc(p.src)}" alt="${esc(p.caption)}" loading="lazy"><figcaption>${esc(p.caption)}</figcaption></figure>`).join('') +
     `</div>`;
 }
@@ -344,10 +358,12 @@ const SCRIPT = [
   ['noura', 'ههههه ما فيه سر 😌 كله من خضاب'],
   ['noura', 'والله حناهم يجنن، ناعم ومنخول وريحته حلوة، ولونه يطلع غامق من أول مرة 🤎'],
   ['noura', 'وأول ما وصلني الطلب انصدمت… جاني في بوكس هدايا رهيييب 🎁 حسيته هدية مو طلب'],
+  ['box'],
+  ['lama', 'يا حلو البوكس 😭😍'],
+  ['dana', 'والأكياس نقشتها تجنن 🌹'],
   ['noura', 'والأدوات كلها خشب! الطاسة والفرشة والمشط، هاي كوالتي مو بلاستيك 😍'],
   ['photos'],
-  ['lama', 'يا حلو البوكس 😭😍'],
-  ['sara', 'الطاسة الخشب شكلها فخم مرة!!'],
+  ['sara', 'الطاسة الخشب شكلها فخم مرة!! ومكتوب عليها خضاب 😍'],
   ['noof', 'خلاص أبيه الحين 🏃‍♀️'],
   ['noura', 'من يوم بديت فيهم شعري تغيّر، وما رجعت للخلطات الثانية'],
   ['dana', 'شفتوا؟ قلت لكم 😏'],
@@ -363,7 +379,8 @@ async function play() {
       statusEl.textContent = statusDefault;
       await sleep(600);
     }
-    else if (who === 'photos') { if (CONFIG.photos.length) await say('noura', 'صور', galleryCard()); }
+    else if (who === 'box') { if (CONFIG.boxPhoto) await say('noura', 'صورة البوكس', boxCard()); }
+    else if (who === 'photos') { if (CONFIG.photos.length) await say('noura', 'صور الأدوات', galleryCard()); }
     else if (who === 'link') await say('noura', 'link', linkCard());
     else if (who === 'code') await say('noura', 'code', codeCard());
     else await say(who, text);
