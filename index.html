@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}*{box-sizing:border-box}</style>
+<title>قروب البنات</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=Lalezar&display=swap">
+<style>
+/* Layout: a group-chat screen — henna-stain header band, patterned "wall", bubbles, and quick replies where the composer would be */
+:root {
+  --bg: #ECE5D8;
+  --dot: rgba(122, 52, 24, .08);
+  --header: #5B2A17;
+  --on-header: #FBEFE6;
+  --on-header-muted: #E2C3B0;
+  --in: #FFFDF9;
+  --out: #F5D9C3;
+  --fg: #2A1A12;
+  --muted: #7D6A5E;
+  --accent: #B4471F;
+  --leaf: #5F6B2E;
+  --sys: rgba(255, 253, 249, .85);
+  --line: rgba(91, 42, 23, .14);
+  --c1: #B4471F;
+  --c2: #5F6B2E;
+  --c3: #7B3F8C;
+  --c4: #A3174E;
+  --c5: #1F7563;
+  --shadow: 0 1px 1px rgba(60, 25, 10, .10);
+  --display: "Lalezar", "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15100D; --dot: rgba(230, 140, 90, .07); --header: #2B1710; --on-header: #F6E3D6; --on-header-muted: #BFA190;
+    --in: #241A15; --out: #4A2517; --fg: #F2E6DD; --muted: #A8958A; --accent: #E58257; --leaf: #AEBE70;
+    --sys: rgba(36, 26, 21, .9); --line: rgba(246, 227, 214, .12);
+    --c1: #F09468; --c2: #B9C97A; --c3: #CE9BDD; --c4: #F07FA6; --c5: #7FD1BC; --shadow: 0 1px 1px rgba(0, 0, 0, .4);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15100D; --dot: rgba(230, 140, 90, .07); --header: #2B1710; --on-header: #F6E3D6; --on-header-muted: #BFA190;
+  --in: #241A15; --out: #4A2517; --fg: #F2E6DD; --muted: #A8958A; --accent: #E58257; --leaf: #AEBE70;
+  --sys: rgba(36, 26, 21, .9); --line: rgba(246, 227, 214, .12);
+  --c1: #F09468; --c2: #B9C97A; --c3: #CE9BDD; --c4: #F07FA6; --c5: #7FD1BC; --shadow: 0 1px 1px rgba(0, 0, 0, .4);
+  color-scheme: dark;
+}
+
+html, body { min-height: 100%; }
+body {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle, var(--dot) 1.4px, transparent 1.8px),
+    radial-gradient(circle, transparent 6px, var(--dot) 6.5px, var(--dot) 7.5px, transparent 8px);
+  background-size: 22px 22px, 66px 66px;
+  background-position: 0 0, 11px 11px;
+  color: var(--fg);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.6;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--header); }
+
+.inner {
+  max-width: 560px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* Header */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--header); color: var(--on-header); box-shadow: 0 2px 10px rgba(0,0,0,.18); }
+.top .inner { display: flex; align-items: center; gap: 12px; padding-block: 10px; }
+.group-av { width: 42px; height: 42px; flex: none; border-radius: 50%; display: grid; place-items: center; font-size: 22px; background: color-mix(in srgb, var(--on-header) 16%, transparent); }
+.ttl { flex: 1; min-width: 0; }
+.ttl h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 21px; line-height: 1.2; letter-spacing: 0; }
+.ttl p { margin: 0; font-size: 12.5px; color: var(--on-header-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ttl p.typing { color: var(--on-header); }
+
+/* Chat */
+.chat .inner { display: flex; flex-direction: column; gap: 4px; padding-block: 14px 170px; }
+.sys { align-self: center; max-width: 90%; text-align: center; font-size: 12.5px; color: var(--muted); background: var(--sys); padding: 4px 12px; border-radius: 10px; box-shadow: var(--shadow); margin-block: 8px; animation: pop .22s ease-out; }
+
+.row { display: flex; align-items: flex-end; gap: 8px; max-width: 86%; animation: pop .22s ease-out; }
+.row.cont { margin-top: -1px; }
+.row.mine { align-self: flex-end; flex-direction: row-reverse; }
+.av { width: 30px; height: 30px; flex: none; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 14px; color: var(--in); background: var(--who); }
+.row.cont .av { visibility: hidden; }
+.row.mine .av { display: none; }
+
+.msg { min-width: 0; background: var(--in); padding: 6px 12px 4px; border-radius: 14px; box-shadow: var(--shadow); }
+.row:not(.cont):not(.mine) .msg { border-start-start-radius: 4px; }
+.row.mine .msg { background: var(--out); border-start-end-radius: 4px; }
+.row.mine.cont .msg { border-start-end-radius: 14px; }
+.name { display: block; font-size: 13px; font-weight: 700; color: var(--who); line-height: 1.4; }
+.row.cont .name { display: none; }
+.text { overflow-wrap: anywhere; }
+.meta { display: block; text-align: left; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; line-height: 1.3; margin-top: 1px; }
+.tick { color: var(--leaf); margin-inline-start: 3px; letter-spacing: -3px; }
+
+.dots { display: inline-flex; gap: 4px; padding: 6px 2px; }
+.dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); opacity: .4; animation: blink 1.1s infinite; }
+.dots i:nth-child(2) { animation-delay: .18s; }
+.dots i:nth-child(3) { animation-delay: .36s; }
+
+/* Store link preview + code */
+.preview { margin: 4px -6px 6px; border-radius: 10px; overflow: hidden; background: color-mix(in srgb, var(--accent) 8%, var(--in)); }
+.swatch { height: 92px; display: grid; place-items: center; color: #FFF6EE; font-family: var(--display); font-size: 34px;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,.18) 0 2px, transparent 3px) 0 0 / 18px 18px,
+    linear-gradient(135deg, #B4471F, #5B2A17); }
+.preview .pv { padding: 8px 10px; }
+.preview strong { display: block; font-size: 14px; }
+.preview small { color: var(--muted); }
+.preview a { color: var(--accent); font-size: 13px; overflow-wrap: anywhere; }
+.code { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 6px 0 4px; padding: 8px 12px; border: 2px dashed var(--accent); border-radius: 12px; }
+.code output { font-family: var(--display); font-size: 26px; color: var(--accent); user-select: all; }
+.code.locked { animation: tease 3.2s ease-in-out 1s infinite; }
+.code.locked output { filter: blur(7px); user-select: none; }
+.code output { transition: filter .4s ease; }
+@keyframes tease { 0%, 86%, 100% { transform: none; } 89% { transform: rotate(-2deg); } 92% { transform: rotate(2deg); } 95% { transform: rotate(-1deg); } }
+@media (prefers-reduced-motion: reduce) { .code.locked { animation: none; } }
+.btn { font: inherit; font-size: 13px; font-weight: 700; border: 0; border-radius: 999px; padding: 6px 14px; background: var(--accent); color: var(--in); cursor: pointer; }
+.btn:focus-visible, .shop:focus-visible, .chip:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent); outline-offset: 2px; }
+
+/* Answers */
+.tip { display: flex; gap: 8px; align-items: flex-start; margin-top: 6px; }
+.tag { flex: none; font-size: 12px; font-weight: 700; padding: 1px 9px; border-radius: 999px; color: var(--in); margin-top: 3px; }
+.tag.henna { background: var(--accent); }
+.tag.sidr { background: var(--leaf); }
+.tag.secret { background: var(--c3); }
+.how { margin-top: 8px; padding: 6px 10px; border-radius: 10px; background: color-mix(in srgb, var(--leaf) 13%, transparent); font-size: 14px; }
+.more { display: block; margin-top: 6px; font-size: 13.5px; color: var(--muted); }
+.more a { color: var(--accent); font-weight: 700; }
+
+/* Bottom: quick replies + store button */
+.composer { position: fixed; inset: auto 0 0; z-index: 6; padding-bottom: env(safe-area-inset-bottom, 0px); background: linear-gradient(to top, var(--bg) 72%, transparent); }
+.composer .inner { padding-block: 12px; display: flex; flex-direction: column; gap: 10px; }
+.chips-label { font-size: 12.5px; color: var(--muted); margin: 0 4px -4px; }
+.chips { display: flex; gap: 8px; overflow-x: auto; padding-block: 2px 4px; scrollbar-width: none; direction: ltr; cursor: grab; touch-action: pan-x;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
+.chips::-webkit-scrollbar { display: none; }
+.chips.dragging { cursor: grabbing; user-select: none; }
+.chip { direction: rtl; flex: none; font: inherit; font-size: 13.5px; font-weight: 500; padding: 7px 14px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); background: var(--in); color: var(--fg); cursor: pointer; box-shadow: var(--shadow); }
+.chip:hover:not(:disabled) { border-color: var(--accent); }
+.chip[aria-pressed="true"] { background: color-mix(in srgb, var(--accent) 14%, var(--in)); border-color: var(--accent); }
+.chip:disabled { opacity: .55; cursor: default; }
+.shop { display: block; text-align: center; text-decoration: none; background: var(--accent); color: var(--in); border-radius: 999px; padding: 12px 16px; font-weight: 700; box-shadow: var(--shadow); }
+
+@keyframes pop { from { transform: translateY(6px) scale(.98); opacity: .2; } to { transform: none; opacity: 1; } }
+@keyframes blink { 0%, 100% { opacity: .3; } 40% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .row, .sys { animation: none; } .dots i { animation: none; opacity: .7; } }
+</style>
+</head>
+<body>
+
+<div dir="rtl" lang="ar">
+  <header class="top">
+    <div class="inner">
+      <div class="group-av" aria-hidden="true">💅</div>
+      <div class="ttl">
+        <h1>البنات 💅</h1>
+        <p id="status">نوف، سارة، لمى، دانة، أنتِ</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="chat"><div class="inner" id="chat" aria-live="polite"></div></main>
+
+  <footer class="composer">
+    <div class="inner">
+      <div class="chips-label" id="chipsLabel">استني نورة تدخل القروب 👀</div>
+      <div class="chips" id="chips" role="group" aria-label="اسألي نورة"></div>
+      <a class="shop" id="shop" target="_blank" rel="noopener" hidden>🌿 روحي لمتجر خضاب</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+// عدّلي هذي القيم قبل الإطلاق
+const CONFIG = {
+  brand: 'خضاب',
+  tagline: 'حنا وسدر طبيعي للشعر واليدين',
+  // رابط المتجر مع رموز تتبع خاصة بحملة الباركود (تظهر في Google Analytics / تقارير المتجر)
+  storeUrl: 'https://kedhab-ksa.com/ar?utm_source=qr&utm_medium=offline&utm_campaign=malaqif_noura',
+  displayUrl: 'kedhab-ksa.com',
+  code: 'نورة10'                    // كود الخصم (لازم يكون نفس الكود اللي في لوحة المتجر)
+};
+
+document.documentElement.lang = 'ar';
+const chat = document.getElementById('chat');
+const statusEl = document.getElementById('status');
+let statusDefault = statusEl.textContent;
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+document.getElementById('shop').href = CONFIG.storeUrl;
+
+const P = {
+  noof:  { name: 'نوف',  c: 'var(--c1)' },
+  sara:  { name: 'سارة', c: 'var(--c2)' },
+  lama:  { name: 'لمى',  c: 'var(--c3)' },
+  dana:  { name: 'دانة', c: 'var(--c4)' },
+  noura: { name: 'نورة', c: 'var(--c5)' },
+  me:    { name: 'أنتِ', c: 'var(--accent)' }
+};
+
+const AR = '٠١٢٣٤٥٦٧٨٩';
+const toAr = s => String(s).replace(/\d/g, d => AR[d]);
+const sleep = ms => new Promise(r => setTimeout(r, reduced ? 0 : ms));
+const now = () => toAr(new Date().toLocaleTimeString('en-GB', { hour: 'numeric', minute: '2-digit', hour12: true }).replace('am', 'ص').replace('pm', 'م'));
+const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const storeLink = () => `<a href="${esc(CONFIG.storeUrl)}" target="_blank" rel="noopener">${esc(CONFIG.brand)}</a>`;
+
+let lastWho = null;
+function scrollDown() { window.scrollTo({ top: document.body.scrollHeight, behavior: reduced ? 'auto' : 'smooth' }); }
+
+function addSys(text) {
+  const el = document.createElement('div');
+  el.className = 'sys';
+  el.textContent = text;
+  chat.appendChild(el);
+  lastWho = null;
+  scrollDown();
+}
+
+function bubble(who, inner, opts = {}) {
+  const p = P[who];
+  const row = document.createElement('div');
+  row.className = 'row' + (who === 'me' ? ' mine' : '') + (lastWho === who ? ' cont' : '');
+  row.style.setProperty('--who', p.c);
+  row.innerHTML =
+    `<div class="av" aria-hidden="true">${p.name[0]}</div>` +
+    `<div class="msg"><span class="name">${p.name}</span>${inner}` +
+    (opts.noMeta ? '' : `<span class="meta">${now()}${who === 'me' ? '<span class="tick">✓✓</span>' : ''}</span>`) +
+    `</div>`;
+  chat.appendChild(row);
+  lastWho = who;
+  scrollDown();
+  return row;
+}
+
+async function say(who, text, html) {
+  if (!reduced) {
+    statusEl.textContent = `${P[who].name} تكتب…`;
+    statusEl.classList.add('typing');
+    const prev = lastWho;
+    const t = bubble(who, '<span class="dots" aria-label="تكتب"><i></i><i></i><i></i></span>', { noMeta: true });
+    await sleep(Math.min(1400, Math.max(550, (text || '').length * 35)));
+    t.remove();
+    lastWho = prev;
+    statusEl.textContent = statusDefault;
+    statusEl.classList.remove('typing');
+  }
+  bubble(who, html || `<span class="text">${esc(text)}</span>`);
+  await sleep(380);
+}
+
+function linkCard() {
+  return `<div class="preview"><div class="swatch">${esc(CONFIG.brand)}</div>` +
+    `<div class="pv"><strong>متجر ${esc(CONFIG.brand)}</strong><small>${esc(CONFIG.tagline)}</small><br>` +
+    `<a href="${esc(CONFIG.storeUrl)}" target="_blank" rel="noopener">${esc(CONFIG.displayUrl)}</a></div></div>`;
+}
+// The code arrives hidden; tapping "don't tap" is the whole point
+let codeRevealed = false;
+function codeCard() {
+  return `<span class="text">وعندي كود خصم… بس مو لأي أحد 🤭</span>` +
+    `<div class="code locked"><output aria-label="كود مخفي">${esc(CONFIG.code)}</output><button class="btn reveal" type="button">لا تضغطين 🙈</button></div>`;
+}
+chat.addEventListener('click', async ev => {
+  const rev = ev.target.closest('.reveal');
+  if (rev) {
+    const card = rev.parentElement;
+    card.classList.remove('locked');
+    card.querySelector('output').removeAttribute('aria-label');
+    rev.classList.replace('reveal', 'copy');
+    rev.textContent = 'انسخي';
+    if (!codeRevealed) {
+      codeRevealed = true;
+      await say('noura', 'كنت عارفة إنك بتضغطين 😂', '<span class="text">كنت عارفة إنك بتضغطين 😂 يلا استخدميه قبل لا يخلص</span>');
+    }
+    return;
+  }
+  const btn = ev.target.closest('.copy');
+  if (!btn) return;
+  const out = btn.parentElement.querySelector('output');
+  const fallback = () => { const r = document.createRange(); r.selectNodeContents(out); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'اضغطي نسخ'; };
+  try { navigator.clipboard.writeText(CONFIG.code).then(() => { btn.textContent = 'انسخ ✓'; }, fallback); }
+  catch (err) { fallback(); }
+});
+
+const SCRIPT = [
+  ['sys', 'دخلتِ القروب عن طريق الباركود 👀'],
+  ['noof', 'مين هذي اللي دخلت؟ 👀'],
+  ['lama', 'ههههه عسل جديدة 😍 حيّاك'],
+  ['noof', 'المهم… شفتوا نورة أمس في العزيمة؟؟ 😳'],
+  ['sara', 'ياااه! حنا يدها يجنننن 😍'],
+  ['dana', 'النقش ناعم ولونه غامق، كأنه مرسوم رسم 🤎'],
+  ['lama', 'وشعرها!! ناعم ويلمع، كل ما تحركه كأنها في إعلان شامبو 😭'],
+  ['noof', 'هههههه والله صادقة'],
+  ['sara', 'والبيبي هير كثيف ومرتب، حسبته تركيب أول 🙈'],
+  ['dana', 'وبشرتها تلمع تلق لق ✨ وهي تقريباً بدون مكياج'],
+  ['lama', 'كل البنات كانوا يطالعونها'],
+  ['noof', 'أنا رحت سلمت عليها مرتين بس عشان أشوف شعرها من قريب 🤣'],
+  ['sara', 'وأنا سألتها وش تستخدم، ضحكت وقالت «طبيعي» 🙄'],
+  ['noof', 'طبيعي كيف يعني؟؟ أبي أعرف الحين'],
+  ['dana', 'أختي تعرفها، تقول من سنة وهي ما تستخدم إلا حنا وسدر'],
+  ['sara', 'إيه سمعت إنها تجيبهم من متجر اسمه «خضاب» 🌿'],
+  ['lama', 'مين معاه رابط المتجر؟'],
+  ['noof', 'لا ما أبي الرابط بس، أبي أعرف كيف تخلطه 😩'],
+  ['dana', 'أقول… ضيفوا نورة معانا وتعلمنا بنفسها 😏'],
+  ['sara', 'ثواني أضيفها'],
+  ['add-noura'],
+  ['noura', 'هلا والله 😂 وصلني إنكم تتكلمون عني'],
+  ['lama', 'نورررة 😍 شعرك أمس كان شي ثاني'],
+  ['noof', 'علمينا سرك تكفين 🙏'],
+  ['noura', 'ههههه ما فيه سر 😌 كله حنا وسدر من خضاب'],
+  ['noura', 'من يوم بديت فيهم شعري تغيّر، وما رجعت للخلطات الثانية'],
+  ['dana', 'شفتوا؟ قلت لكم 😏'],
+  ['noura', 'وقولوا لي وش يضايقكم بشعركم أو بشرتكم، وأقولكم وش يناسبكم… اختاروا تحت 👇']
+];
+
+async function play() {
+  for (const [who, text] of SCRIPT) {
+    if (who === 'sys') { addSys(text); await sleep(500); }
+    else if (who === 'add-noura') {
+      addSys('سارة أضافت نورة');
+      statusDefault = 'نوف، سارة، لمى، دانة، نورة، أنتِ';
+      statusEl.textContent = statusDefault;
+      await sleep(600);
+    }
+    else if (who === 'link') await say('noura', 'link', linkCard());
+    else if (who === 'code') await say('noura', 'code', codeCard());
+    else await say(who, text);
+  }
+}
+
+// What Noura answers for each problem
+const PROBLEMS = [
+  { chip: 'حنا اليدين 🤲', me: 'أبي حنا يدي يطلع مثل حقك 😍', intro: 'حنا اليدين له أصول 😌',
+    tips: [['henna', 'حنا خضاب ناعم، اعجنيه بماي دافي وليمون وخليه يرتاح ساعتين قبل الرسم، فيطلع النقش ناعم وواضح.'],
+           ['secret', 'خليه على يدك ٤ ساعات أو أكثر، ولا تغسلينه بالماي. حكّيه وحطي عليه شوية زيت.']],
+    how: 'وكل ما تأخرتي عن الماي أول يوم، صار اللون أغمق 🤎' },
+  { chip: 'منفوش 🦁', me: 'شعري منفوش وما ينضبط 😩', intro: 'النفشة؟ سهلة 😌',
+    tips: [['henna', 'يغلّف الشعرة ويثقّلها شوي، فتنزل النفشة ويصير ملمسه أنعم.'],
+           ['sidr', 'غسّلي فيه بدل الشامبو القوي، ينظف بدون ما ينشّف فيقل التطاير.']],
+    how: 'حنا مع ماي دافي وملعقة زيت زيتون، خليه ساعتين، وبعدين اغسلي بالسدر.' },
+  { chip: 'البيبي هير خفيف', me: 'أبي البيبي هير كثيف مثل حقك 🥺', intro: 'هذا سري المفضل 🤫',
+    tips: [['henna', 'يقوّي الحواف ويكثّف شكلها مع الوقت.'],
+           ['sidr', 'ينظف منابت الشعر عند الحواف من بقايا الجل والمنتجات.']],
+    how: 'خلطة حنا مع زيت، دلكيها على الحواف مرة بالأسبوع، وخففي الشد والربطات القوية.' },
+  { chip: 'يتساقط 😢', me: 'شعري يطيح كثير وصار خفيف', intro: 'التساقط يبي له اهتمام بالفروة قبل الشعر 👇',
+    tips: [['sidr', 'ينظف فروة الراس بلطف ويريحها، والفروة النظيفة أساس الشعر الصحي.'],
+           ['henna', 'يقوّي الشعرة ويكثّف شكلها، فيبان الشعر أكثف وأقوى.']],
+    how: 'سدر على الفروة مرة بالأسبوع ١٥ دقيقة، وحنا مرة كل أسبوعين.' },
+  { chip: 'قشرة وحكة', me: 'عندي قشرة وحكة بالفروة 😖', intro: 'هنا السدر هو البطل 💪',
+    tips: [['sidr', 'ينظف الفروة ويهدّيها ويخفف القشور.'],
+           ['henna', 'يخفف الدهون الزايدة اللي تزيد القشرة.']],
+    how: 'عجينة سدر مع ماي دافي على الفروة، دلكي بلطف، خليها ٢٠ دقيقة واغسليها.' },
+  { chip: 'دهني', me: 'شعري يدهّن بسرعة، ثاني يوم يخرب', intro: 'الدهون تبي تنظيف لطيف مو قاسي 👇',
+    tips: [['sidr', 'ينظف الدهون بعمق بدون ما يجرد الشعر، فتطول نظافته.'],
+           ['henna', 'يوازن الفروة ويخلي الشعر أخف.']],
+    how: 'سدر مكان الشامبو مرتين بالأسبوع.' },
+  { chip: 'ناشف ومتقصف', me: 'شعري ناشف وأطرافه متقصفة', intro: 'الناشف يبي له خلطة مرطبة 🥣',
+    tips: [['sidr', 'مع لبن أو زيت يصير ماسك ينعّم الأطراف.'],
+           ['henna', 'لا تحطينه لحاله، اخلطيه مع زيت أو صفار بيض عشان يقوّي بدون ما ينشّف.']],
+    how: 'ماسك سدر + لبن + ملعقة زيت، ٣٠ دقيقة على الأطراف.' },
+  { chip: 'شيب', me: 'بدا يطلع لي شيب 🙈', intro: 'الحنا أحلى صديقة للشيب 😌',
+    tips: [['henna', 'يغطي الشيب بلون طبيعي من النحاسي للأحمر ويثبت أسابيع.'],
+           ['sidr', 'غسلة سدر قبله تنظف الشعر فيمسك اللون أحسن.']],
+    how: 'حنا مع شاي ثقيل عشان يطلع اللون أغمق، وخليه ٣ ساعات.' },
+  { chip: 'شعري باهت', me: 'شعري باهت وما فيه لمعة', intro: 'تبين لمعة تبان بالشمس؟ ✨',
+    tips: [['henna', 'يعطي لمعة واضحة ولون دافي.'],
+           ['sidr', 'ينظف بقايا المنتجات اللي تطفي الشعر.']],
+    how: 'غسلة سدر، بعدها حنا ساعتين، واشطفي بماي بارد.' },
+  { chip: 'بشرتي باهتة ✨', me: 'وبشرتك؟ كيف تلمع كذا؟ 😳', intro: 'هههه السدر مو بس للشعر 😉',
+    tips: [['sidr', 'ماسك سدر مع ماي ورد ينظف البشرة بلطف ويعطيها نضارة.'],
+           ['secret', 'جربيه أول على جزء صغير من وجهك، ولا تحطين الحنا على الوجه.']],
+    how: 'ملعقة سدر + ماي ورد، ١٠ دقايق مرة بالأسبوع، واغسليه بماي فاتر.' }
+];
+
+const chipsEl = document.getElementById('chips');
+const chipsLabel = document.getElementById('chipsLabel');
+const TAGS = { henna: 'حنا', sidr: 'سدر', secret: 'سر' };
+function setChips(on) {
+  chipsEl.querySelectorAll('.chip').forEach(c => { c.disabled = !on; });
+  chipsLabel.textContent = on ? 'اسألي نورة 👇 وش يضايقك؟' : 'استني نورة تدخل القروب 👀';
+}
+// Two copies of the chips so the strip can loop forever
+let firstClone = null;
+[0, 1].forEach(copy => PROBLEMS.forEach((p, i) => {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'chip';
+  b.textContent = p.chip;
+  b.setAttribute('aria-pressed', 'false');
+  if (copy) { b.tabIndex = -1; b.setAttribute('aria-hidden', 'true'); if (i === 0) firstClone = b; }
+  b.addEventListener('click', () => answer(p, b));
+  chipsEl.appendChild(b);
+}));
+
+// Auto-scrolling strip: pauses on hover/touch, also scrolls with the wheel and mouse drag
+const loopWidth = () => firstClone.offsetLeft - chipsEl.firstElementChild.offsetLeft;
+let pos = 0, paused = false, resumeT, drag = null, dragged = false;
+const wrap = () => { const w = loopWidth(); if (chipsEl.scrollLeft >= w) chipsEl.scrollLeft -= w; else if (chipsEl.scrollLeft <= 0) chipsEl.scrollLeft += w; pos = chipsEl.scrollLeft; };
+const pause = () => { paused = true; clearTimeout(resumeT); };
+const resume = () => { clearTimeout(resumeT); resumeT = setTimeout(() => { pos = chipsEl.scrollLeft; paused = false; }, 1800); };
+chipsEl.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') pause(); });
+chipsEl.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !drag) resume(); });
+chipsEl.addEventListener('touchstart', pause, { passive: true });
+chipsEl.addEventListener('touchend', resume);
+chipsEl.addEventListener('scroll', () => { if (paused) wrap(); });
+chipsEl.addEventListener('wheel', e => {
+  if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) { chipsEl.scrollLeft += e.deltaY; e.preventDefault(); }
+  pos = chipsEl.scrollLeft;
+}, { passive: false });
+chipsEl.addEventListener('pointerdown', e => {
+  if (e.pointerType !== 'mouse') return;
+  drag = { x: e.clientX, s: chipsEl.scrollLeft };
+  dragged = false;
+});
+window.addEventListener('pointermove', e => {
+  if (!drag) return;
+  const dx = e.clientX - drag.x;
+  if (Math.abs(dx) > 5) { dragged = true; chipsEl.classList.add('dragging'); }
+  chipsEl.scrollLeft = drag.s - dx;
+});
+window.addEventListener('pointerup', () => {
+  if (!drag) return;
+  drag = null;
+  chipsEl.classList.remove('dragging');
+  if (!chipsEl.matches(':hover')) resume();
+});
+chipsEl.addEventListener('click', e => { if (dragged) { e.stopPropagation(); e.preventDefault(); dragged = false; } }, true);
+function loop() {
+  if (!paused && !drag) {
+    pos += 0.45;
+    const w = loopWidth();
+    if (pos >= w) pos -= w;
+    chipsEl.scrollLeft = pos;
+  }
+  requestAnimationFrame(loop);
+}
+if (!reduced) requestAnimationFrame(loop);
+
+// The store link stays hidden until the first chip is tapped
+let linkShown = false;
+async function answer(p, btn) {
+  setChips(false);
+  btn.setAttribute('aria-pressed', 'true');
+  bubble('me', `<span class="text">${esc(p.me)}</span>`);
+  await sleep(500);
+  const tips = p.tips.map(([k, t]) =>
+    `<div class="tip"><span class="tag ${k}">${TAGS[k]}</span><span>${esc(t)}</span></div>`).join('');
+  const more = linkShown ? `<span class="more">كله تلقينه في ${storeLink()} 👈</span>` : '';
+  await say('noura', p.intro + p.how,
+    `<span class="text">${esc(p.intro)}</span>${tips}<div class="how">🥣 ${esc(p.how)}</div>${more}`);
+  if (!linkShown) {
+    linkShown = true;
+    await say('noura', 'وهذا رابط المتجر', `<span class="text">وهذا رابط المتجر 👇</span>${linkCard()}`);
+    document.getElementById('shop').hidden = false;
+  }
+  setChips(true);
+}
+
+(async function start() {
+  setChips(false);
+  await sleep(400);
+  await play();
+  setChips(true);
+})();
+</script>
+
+</body>
+</html>
