@@ -143,6 +143,13 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .steps li::before { content: counter(s, arabic-indic); flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center;
   font-size: 12px; font-weight: 700; color: var(--in); background: var(--accent); margin-top: 1px; }
 .kb { color: var(--accent); font-weight: 700; }
+.prods { display: flex; flex-direction: column; gap: 6px; margin: 6px 0 2px; }
+.prod { display: flex; align-items: center; gap: 10px; padding: 6px; border-radius: 12px; text-decoration: none; color: var(--fg); background: color-mix(in srgb, var(--accent) 7%, var(--in)); border: 1px solid var(--line); }
+.prod img { width: 52px; height: 52px; flex: none; border-radius: 8px; object-fit: cover; }
+.prod span { display: flex; flex-direction: column; min-width: 0; }
+.prod b { font-size: 14px; }
+.prod small { font-size: 12px; color: var(--accent); font-weight: 700; }
+.prod:first-child { border-color: var(--accent); }
 .shot { margin: 6px -6px 2px; }
 .shot img { display: block; width: min(260px, 62vw); aspect-ratio: 1; object-fit: cover; border-radius: 10px; }
 .shot figcaption { font-size: 12px; color: var(--muted); margin-top: 3px; }
@@ -192,7 +199,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     <div class="inner">
       <div class="chips-label" id="chipsLabel">استني نورة تدخل القروب 👀</div>
       <div class="chips" id="chips" role="group" aria-label="اسألي نورة"></div>
-      <a class="shop" id="shop" target="_blank" rel="noopener" hidden>تعالي نوّري خضاب 🌿</a>
+      <a class="shop" id="shop" target="_blank" rel="noopener" data-track="store" hidden>تعالي نوّري خضاب 🌿</a>
     </div>
   </footer>
 </div>
@@ -203,7 +210,15 @@ const CONFIG = {
   brand: 'خضاب',
   tagline: 'حنا وسدر طبيعي للشعر واليدين',
   // رابط المتجر مع رموز تتبع خاصة بحملة الباركود (تظهر في Google Analytics / تقارير المتجر)
-  storeUrl: 'https://kedhab-ksa.com/ar?utm_source=qr&utm_medium=offline&utm_campaign=malaqif_noura',
+  storeUrl: 'https://kedhab-ksa.com/ar?utm_source=qr&utm_medium=offline&utm_campaign=malaqif_noura&utm_content=store',
+  // روابط المنتجات الخاصة بالحملة: كل رابط فيه utm_content باسم المنتج عشان تفرقونها في التقارير
+  products: {
+    box:   { name: 'بوكس حنا وسدر خضاب', img: 'images/box.jpg',   url: 'https://kedhab-ksa.com/ar/-/p1558882798?utm_source=qr&utm_medium=offline&utm_campaign=malaqif_noura&utm_content=box' },
+    henna: { name: 'بوكس حنا خضاب',      img: 'images/henna.jpg', url: 'https://kedhab-ksa.com/ar/-/p1793113187?utm_source=qr&utm_medium=offline&utm_campaign=malaqif_noura&utm_content=henna' },
+    sidr:  { name: 'بوكس سدر خضاب',      img: 'images/sidr.jpg',  url: 'https://kedhab-ksa.com/ar/-/p40122968?utm_source=qr&utm_medium=offline&utm_campaign=malaqif_noura&utm_content=sidr' }
+  },
+  // عدّاد الزيارات والضغطات (يشتغل على الرابط العام بس)
+  counter: 'https://abacus.jasoncameron.dev/hit/khedhab-qroob/',
   displayUrl: 'kedhab-ksa.com',
   // صور المنتجات اللي ترسلها نورة في القروب (من مجلد images)
   boxPhoto: { src: 'images/box.jpg', caption: 'بوكس خضاب كامل 🎁' },
@@ -238,7 +253,27 @@ const toAr = s => String(s).replace(/\d/g, d => AR[d]);
 const sleep = ms => new Promise(r => setTimeout(r, reduced ? 0 : ms));
 const now = () => toAr(new Date().toLocaleTimeString('en-GB', { hour: 'numeric', minute: '2-digit', hour12: true }).replace('am', 'ص').replace('pm', 'م'));
 const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const storeLink = () => `<a href="${esc(CONFIG.storeUrl)}" target="_blank" rel="noopener">${esc(CONFIG.brand)}</a>`;
+const storeLink = () => `<a href="${esc(CONFIG.storeUrl)}" target="_blank" rel="noopener" data-track="store">${esc(CONFIG.brand)}</a>`;
+const prodLink = k => `<a href="${esc(CONFIG.products[k].url)}" target="_blank" rel="noopener" data-track="${k}">${esc(CONFIG.products[k].name)}</a>`;
+
+// Visit and click counter. Only counts on the public link, never in previews.
+function track(key) {
+  if (!/github\.io$/.test(location.hostname)) return;
+  try { fetch(CONFIG.counter + encodeURIComponent(key), { keepalive: true }).catch(() => {}); } catch (e) {}
+}
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[data-track]');
+  if (a) track('click-' + a.dataset.track);
+});
+
+// The three campaign boxes, with the one that fits her problem first
+function productsCard(first) {
+  const order = [first, ...Object.keys(CONFIG.products).filter(k => k !== first)];
+  return `<span class="text">وهذي بوكساتهم، اختاري اللي يناسبك 👇</span><div class="prods">` +
+    order.map(k => { const p = CONFIG.products[k]; return `<a class="prod" href="${esc(p.url)}" target="_blank" rel="noopener" data-track="${k}">` +
+      `<img src="${esc(p.img)}" alt=""><span><b>${esc(p.name)}</b><small>${k === first ? 'يناسب مشكلتك 👌' : 'شوفيه'}</small></span></a>`; }).join('') +
+    `</div>`;
+}
 
 let lastWho = null;
 function scrollDown() { window.scrollTo({ top: document.body.scrollHeight, behavior: reduced ? 'auto' : 'smooth' }); }
@@ -473,6 +508,10 @@ const PROBLEMS = [
             'اغسليه بمويا فاترة ونشفي وجهك بلطف.'],
     tip: 'جربيه أول على جزء صغير من وجهك، ولا تحطين الحنا على الوجه.' }
 ];
+// Each problem's counter name and the box Noura recommends for it (same order as PROBLEMS)
+[['hands', 'henna'], ['frizz', 'box'], ['dyed', 'sidr'], ['babyhair', 'box'], ['fall', 'box'], ['dandruff', 'sidr'],
+ ['oily', 'sidr'], ['dry', 'sidr'], ['gray', 'henna'], ['dull', 'box'], ['skin', 'sidr']]
+  .forEach(([id, prod], i) => { PROBLEMS[i].id = id; PROBLEMS[i].prod = prod; });
 
 const chipsEl = document.getElementById('chips');
 const chipsLabel = document.getElementById('chipsLabel');
@@ -549,21 +588,27 @@ async function answer(p, btn) {
   const mark = s => esc(s).replace(/(كيس حنا خضاب|حنا خضاب|سدر خضاب|طاسة خضاب الخشبية الفخمة|طاسة خضاب|فرشة خضاب|مشط خضاب الخشبي الفخم|مشط خضاب)/g, '<b class="kb">$1</b>');
   const steps = `<ol class="steps">${p.steps.map(s => `<li><span>${mark(s)}</span></li>`).join('')}</ol>`;
   const tip = p.tip ? `<div class="tip"><span class="tag secret">سر</span><span>${mark(p.tip)}</span></div>` : '';
-  const more = linkShown ? `<span class="more">كله تلقينه في ${storeLink()} 👈</span>` : '';
+  track('chip-' + p.id);
+  const more = linkShown ? `<span class="more">يناسبك ${prodLink(p.prod)} 👈</span>` : '';
   await say('noura', p.intro + p.steps.join(''),
     `<span class="text">${esc(p.intro)}</span>${steps}${tip}${more}`);
   if (!linkShown) {
     linkShown = true;
-    await say('noura', 'وهذا رابط المتجر', `<span class="text">وهذا رابط المتجر 👇</span>${linkCard()}`);
+    await say('noura', 'وهذي بوكساتهم', productsCard(p.prod));
     document.getElementById('shop').hidden = false;
   }
   setChips(true);
 }
 
 (async function start() {
+  // Count one visit per browser tab, only on the public link
+  let fresh = true;
+  try { fresh = !sessionStorage.getItem('qroob-v'); sessionStorage.setItem('qroob-v', '1'); } catch (e) {}
+  if (fresh) track('visits');
   setChips(false);
   await sleep(400);
   await play();
+  if (fresh) track('stayed');
   setChips(true);
 })();
 </script>
